@@ -1,21 +1,32 @@
-Bitmap.prototype.fill = function(row, col, new_color) {
+Bitmap.prototype.fill = function (row, col, new_color) {
     const old_color = this.grid[row][col];
-    if(old_color === new_color) return;
+    if (old_color === new_color) return;
     this.setColor(row, col, new_color);
-
     var queue = [];
-    // The rest of the flood fill algorithm is given in pseudo-code below.
-    // Convert the following pseudo-code comments into javascript
-    // to complete the implementation of this method.
-    //
-    //
-    // Push the coordinates [row, col] onto the queue.
-    // While the queue is not empty:
-    //    Shift a pair of coordinates [r,c] off the front of the queue.
-    //    The 4-connected neighbors are the cells above, below, left, and right.
-    //    Check each of those 4 neighbors:
-    //       If the neighbor is old_color:
-    //          Set the neighbor to new_color.
-    //          Add the neighbors coordinates to the queue
-    //          (to ensure we later check its neighbors as well).
+
+    queue.push(row, col);
+
+    while (typeof queue !== 'undefined' && queue.length !== 0) {
+
+        let currentRow = queue.shift();
+        let currentCol = queue.shift();
+        let neighbors = [
+            [(currentRow - 1), currentCol], //up
+            [(currentRow + 1), currentCol], //down
+            [currentRow, (currentCol - 1)], //left
+            [currentRow, (currentCol + 1)], //right
+        ];
+        for (i = 0; i < neighbors.length; i++) {
+            let nextRow = neighbors[i][0];
+            let nextCol = neighbors[i][1];
+            let next = this.grid[nextRow][nextCol];
+
+            if (next === old_color) {
+                this.setColor(nextRow, nextCol, new_color);
+                queue.push(nextRow, nextCol);
+            } else {
+                continue;
+            }
+        }
+    }
 }
